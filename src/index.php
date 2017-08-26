@@ -2,19 +2,10 @@
 
 session_start();
 
-$app = new \Slim\App([
-    'settings' => ['displayErrorDetails' => true]
-]);
-$container = $app->getContainer();
+$appSettings = require __DIR__ . '/settings.php';
 
-// Sensible PHP Settings
-error_reporting('E_ALL');
-ini_set('display_errors', true);
-ini_set('log_errors', true);
-ini_set('error_log', __DIR__ . '/../logs/php.log');
-date_default_timezone_set('Asia/Jakarta');
+$app = new \Slim\App($appSettings);
 
-// Inject deps
 require __DIR__ . '/dependencies.php';
 
 foreach (glob(__DIR__ . '/routes/*.php') as $route) {

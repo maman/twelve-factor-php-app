@@ -1,15 +1,17 @@
 <?php
 
-// Setup flash msgs
+$container = $app->getContainer();
+
 $container['flash'] = function ($c) {
     return new Slim\Flash\Messages;
 };
 
-// Setup views
 $container['view'] = function($c) {
-    $view = new \Slim\Views\Twig(__DIR__ . '/views', [
-        'cache' => __DIR__ . '/views-cache',
-        'debug' => true,
+    $settings = $c->get('settings')['renderer'];
+    $view = new \Slim\Views\Twig($settings['template_path'], [
+        'cache' => $settings['cache'],
+        'debug' => $settings['debug'],
+        'auto_reload' => $settings['auto_reload'],
     ]);
     $view->addExtension(new \Slim\Views\TwigExtension(
         $c->get('router'),
@@ -18,16 +20,19 @@ $container['view'] = function($c) {
     return $view;
 };
 
-// Setup logger
-$container['logger'] = function() {
-    $logger = new \Monolog\Logger('main');
+$container['logger'] = function($c) {
+    $settings = $c->get('settings')['logger'];
+    $logger = new \Monolog\Logger($settings['name']);
     $logger->pushProcessor(new \Monolog\Processor\UidProcessor());
-    $logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/../logs/main.log', \Monolog\Logger::DEBUG));
+    $logger->pushHandler(new \Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
     return $logger;
 };
 
-// TODO: Setup db
+$container['db'] = function($c) {
+    return "null";
+};
 
-// Setup debugbar
-$container['debugbar_middleware'] = new PhpMiddleware\PhpDebugBar\PhpDebugBarMiddlewareFactory();
-$app->add($app->getContainer()->get('debugbar_middleware'));
+if (!$isProduction) {
+    $container['debugbar_middleware'] = new PhpMiddleware\PhpDebugBar\PhpDebugBarMiddlewareFactory();
+    $app->add($app->getContainer()->get('debugbar_middleware'));
+}

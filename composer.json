@@ -8,7 +8,8 @@
         "monolog/monolog": "^1.23",
         "slim/php-view": "^2.2",
         "php-middleware/php-debug-bar": "^1.4",
-        "slim/flash": "^0.2.0"
+        "slim/flash": "^0.2.0",
+        "runcmf/runtracy": "^0.2.10"
     },
     "autoload": {
         "psr-4": {
