@@ -20,8 +20,6 @@ services:
         - MYSQL_DATABASE=${MYSQL_DATABASE}
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - PHP_ENV=${PHP_ENV}
-        - PHP_APP_LOCALE=${PHP_APP_LOCALE}
 
     webserver:
       image: nginx:alpine
